@@ -1008,6 +1008,11 @@ For `uriString`, an IPv6 address in string form must be enclosed within brackets
 
  The path information does not include the scheme, host name, or query portion of the URI.
 
+ For HTTP and HTTPS URIs, this property can retain escaped path separators such as `%2F`, while <xref:System.Uri.LocalPath> unescapes them. For example, for `https://host/api/public/..%2Fprivate`, <xref:System.Uri.AbsolutePath> is `/api/public/..%2Fprivate`, while <xref:System.Uri.LocalPath> is `/api/public/../private`. A downstream consumer might resolve the latter to `/api/private`.
+
+> [!WARNING]
+> Don't authorize access using <xref:System.Uri.AbsolutePath> and then access the resource using <xref:System.Uri.LocalPath> or a differently decoded path. Authorize the path as resolved by the component that uses it.
+
 ## Examples
  The following example writes the path `/catalog/shownew.htm` to the console.
 
@@ -3180,6 +3185,11 @@ The following examples show a URI and the results of calling <xref:System.Uri.Ge
  The value returned by this property is unescaped. If the path is recognized as a Windows file path, all forward slashes (/) are replaced by backward slashes (\\).
 
  For the URI `file://computer/file.ext`, the absolute path is `/file.ext` and the local path is `\\computer\file.ext`.
+
+ For HTTP and HTTPS URIs, this property unescapes escaped path separators such as `%2F` into `/`, while <xref:System.Uri.AbsolutePath> can retain them. Unescaping can also turn `%00` into a null character.
+
+> [!WARNING]
+> Don't authorize access using <xref:System.Uri.AbsolutePath> and then access the resource using <xref:System.Uri.LocalPath> or a differently decoded path. Authorize the path as resolved by the component that uses it.
 
 ## Examples
  The following example creates a <xref:System.Uri> instance and writes the local path to the console.
